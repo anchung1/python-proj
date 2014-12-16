@@ -16,6 +16,7 @@ class DisplayTk(object):
         self.quit = False
         self.displayDict = {}
         self.entry_count = 0
+        self.timer_interval = 1
         
         for elem in self.ticker.ticker_dict_list :
             Label(self.master, text=elem["Name"]).pack()
@@ -27,7 +28,7 @@ class DisplayTk(object):
             
             self.displayDict[elem["Symbol"]] = textVar
 
-        threading.Timer(1, self.timer_callback).start()
+        threading.Timer(self.timer_interval, self.timer_callback).start()
             
     def tk_delete(self):
         print "deletion"
@@ -57,7 +58,7 @@ class DisplayTk(object):
             textVar.set(labelStr)
             
         print "timer callback"
-        threading.Timer(1, self.timer_callback).start()                          
+        threading.Timer(self.timer_interval, self.timer_callback).start()                          
         
     def display_loop(self):
         mainloop()    
