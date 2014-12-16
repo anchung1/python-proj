@@ -243,8 +243,8 @@ class DisplayPhoto(object):
 
 def main():
 
-    flickr_api_key = ""
-    flickr_secret_key = ""
+    flickr_api_key = "76cceea6d278cbd158a726e6860951e7"
+    flickr_secret_key = "983fd9b1162d9427"
 
     flickr = Flickr(flickr_api_key, flickr_secret_key)
     ##flickr.get_echo()

@@ -1,6 +1,6 @@
 import urllib2
 import re
-from _elementtree import Element
+from view import Display
 
 
 #http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20%20%28%22GM%22%2C%22ANET%22%2C%22MA%22%2C%22YHOO%22%2C%22FB%22%2C%22AMZN%22%2C%22CSCO%22%29&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env
@@ -119,6 +119,9 @@ def main():
        
     for elem in ticker.ticker_dict_list :
         print elem
+        
+    display = Display()
+    display.display_loop()
         
 
 if __name__ == "__main__":
