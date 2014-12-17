@@ -13,17 +13,23 @@ class Ticker(object):
         self.quote_list = []
         self.ticker_dict_list = []
     
-    
     def get_raw_quote(self):
         req_str = """http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20%20%28%22GM%22%2C%22ANET%22%2C%22MA%22%2C%22YHOO%22%2C%22FB%22%2C%22AMZN%22%2C%22CSCO%22%29&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env"""
-
+        
         req = urllib2.Request(req_str)
-        response = urllib2.urlopen(req)
+        try:
+            response = urllib2.urlopen(req)
+        except:
+            return ""
+            
         resPage = response.read()
         return resPage
         
     def get_results_tag(self):
         raw_quote = self.get_raw_quote()
+        if len(raw_quote) == 0 :
+            return False
+        
         
         matchObj = re.match('(.*?)\n(.+)', raw_quote)
         if matchObj == None:
@@ -37,11 +43,14 @@ class Ticker(object):
         matchObj = re.match('.+<results>(.+)</results>', raw_quote)
         self.quotes = matchObj.group(1)
         self.current_buffer = self.quotes
-       
+        
+        return True
         
     def get_quote_tag(self):
         
-        self.get_results_tag()
+        if self.get_results_tag() == False :
+            return False
+        
         while True:
             matchObj = re.match('(<quote (.*?)</quote>)(.+)?', self.current_buffer)
             if matchObj == None:
@@ -54,6 +63,7 @@ class Ticker(object):
             self.current_buffer = matchObj.group(3)
             self.quote_list.append(matchObj.group(1))
         
+        return True
         
     def get_field(self, fieldName, quote):
         
@@ -122,10 +132,14 @@ class Ticker(object):
         
     def update_quote(self):
         #print "update_quote"
-        self.get_quote_tag()
+        if self.get_quote_tag() == False :
+            print "unable to get quote"
+            return False
+        
         for elem in self.quote_list :
             self.parse_quote(elem)
         #for elem in self.ticker_dict_list :
             #print elem["Symbol"] + " " + elem["LastTradePriceOnly"]
-    
+        
+        return True
 

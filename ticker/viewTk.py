@@ -8,7 +8,8 @@ class DisplayTk(object):
     def __init__(self):
         
         self.ticker = Ticker()
-        self.ticker.update_quote()
+        if self.ticker.update_quote() == False :
+            return
         
         self.rootWin = Tk()
         self.rootWin.protocol("WM_DELETE_WINDOW", self.tk_delete)
@@ -77,7 +78,9 @@ class DisplayTk(object):
         
     def timer_callback(self):
         
-        self.ticker.update_quote()
+        if self.ticker.update_quote() == False :
+            self.rootWin.after(self.timer_interval, self.timer_callback)
+            return 
         
         if self.quit == True :
             print "quit"
