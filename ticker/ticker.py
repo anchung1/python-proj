@@ -49,7 +49,7 @@ class Ticker(object):
                 print self.current_buffer
                 break
             if matchObj.lastindex < 3:
-                print "last elem"
+                #print "last elem"
                 break
             self.current_buffer = matchObj.group(3)
             self.quote_list.append(matchObj.group(1))
@@ -59,8 +59,8 @@ class Ticker(object):
         
         expression = ".*?<" + fieldName + ">(.*)</" + fieldName + ">(.+)"
         matchObj = re.match(expression, quote)
-        return matchObj.group(1), matchObj.group(2)
-
+        #return matchObj.group(1), matchObj.group(2)
+        return matchObj.group(1)
             
     def parse_quote(self, quote):
         dict = {}
@@ -72,49 +72,60 @@ class Ticker(object):
         #dict["symbol"] = symbol
     
         extract = "DaysLow"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
         
         extract = "DaysHigh"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
 
         extract = "YearLow"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
 
         extract = "YearHigh"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
         
         extract = "LastTradePriceOnly"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
     
         extract = "Name"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
     
         extract = "Open"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
     
         extract = "ChangeinPercent"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val    
     
         extract = "Symbol"    
-        (val, quote) = self.get_field(extract, quote)
+        val = self.get_field(extract, quote)
         dict[extract] = val
+        
+        extract = "DaysRange"
+        val = self.get_field(extract, quote)
+        dict[extract] = val
+
+        extract = "YearRange"
+        val = self.get_field(extract, quote)
+        dict[extract] = val
+        
+        
         
         #print dict
         self.ticker_dict_list.append(dict)
         
     def update_quote(self):
+        print "update_quote"
         self.get_quote_tag()
         for elem in self.quote_list :
             self.parse_quote(elem)
-        for elem in self.ticker_dict_list :
-            print elem["Symbol"] + " " + elem["LastTradePriceOnly"]
+        #for elem in self.ticker_dict_list :
+            #print elem["Symbol"] + " " + elem["LastTradePriceOnly"]
     
 
