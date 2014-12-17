@@ -1,6 +1,7 @@
 from Tkinter import *
 from ticker import Ticker
 import time, threading
+import re
         
 class DisplayTk(object):
     
@@ -23,7 +24,8 @@ class DisplayTk(object):
 
             labelStr = elem["Symbol"] + ": " + elem["LastTradePriceOnly"] 
             price = StringVar()
-            Label(self.rootWin, textvariable=price).grid(row=rowVal, column=0)
+            symbolWidget = Label(self.rootWin, textvariable=price)
+            symbolWidget.grid(row=rowVal, column=0)
             price.set(labelStr)
             
             labelStr = elem["ChangeinPercent"]
@@ -31,6 +33,11 @@ class DisplayTk(object):
             Label(self.rootWin, textvariable=percentChange).grid(row=rowVal, column=1)
             percentChange.set(labelStr)
             rowVal += 1
+            
+            if labelStr[0] == "+" :
+                symbolWidget.config(fg = "blue")
+            else :
+                symbolWidget.config(fg = "red")
             
             labelStr = "day: " + elem["DaysRange"]
             daysRange = StringVar()
@@ -48,7 +55,7 @@ class DisplayTk(object):
             rowVal += 1
             
             
-            self.displayDict[elem["Symbol"]] = (price, percentChange, daysRange, yearRange)
+            self.displayDict[elem["Symbol"]] = (price, percentChange, daysRange, yearRange, symbolWidget)
             
 
         #threading.Timer(self.timer_interval, self.timer_callback).start()
@@ -72,13 +79,18 @@ class DisplayTk(object):
         
         for elem in self.ticker.ticker_dict_list :
             entry = elem["Symbol"]
-            (price, percentChange, daysRange, yearRange) = self.displayDict[entry]
+            (price, percentChange, daysRange, yearRange, symbolWidget) = self.displayDict[entry]
  
             labelStr = elem["Symbol"] + ": " + elem["LastTradePriceOnly"]
             price.set(labelStr)
             
             labelStr = elem["ChangeinPercent"]
             percentChange.set(labelStr)
+            if labelStr[0] == "+" :
+                symbolWidget.config(fg = "blue")
+            else :
+                symbolWidget.config(fg = "red")
+        
             
             labelStr = "day: " + elem["DaysRange"]
             daysRange.set(labelStr)
@@ -88,7 +100,7 @@ class DisplayTk(object):
           
             
             
-        print "timer callback"
+        #print "timer callback"
         #threading.Timer(self.timer_interval, self.timer_callback).start()                          
         self.rootWin.after(self.timer_interval, self.timer_callback)
         

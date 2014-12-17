@@ -121,7 +121,7 @@ class Ticker(object):
         self.ticker_dict_list.append(dict)
         
     def update_quote(self):
-        print "update_quote"
+        #print "update_quote"
         self.get_quote_tag()
         for elem in self.quote_list :
             self.parse_quote(elem)
