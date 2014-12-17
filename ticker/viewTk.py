@@ -30,14 +30,13 @@ class DisplayTk(object):
             
             labelStr = elem["ChangeinPercent"]
             percentChange = StringVar()
-            Label(self.rootWin, textvariable=percentChange).grid(row=rowVal, column=1)
+            percentWidget = Label(self.rootWin, textvariable=percentChange)
+            percentWidget.grid(row=rowVal, column=1)
             percentChange.set(labelStr)
             rowVal += 1
             
-            if labelStr[0] == "+" :
-                symbolWidget.config(fg = "blue")
-            else :
-                symbolWidget.config(fg = "red")
+            self.color_code(labelStr, symbolWidget, percentWidget)
+
             
             labelStr = "day: " + elem["DaysRange"]
             daysRange = StringVar()
@@ -55,7 +54,8 @@ class DisplayTk(object):
             rowVal += 1
             
             
-            self.displayDict[elem["Symbol"]] = (price, percentChange, daysRange, yearRange, symbolWidget)
+            self.displayDict[elem["Symbol"]] = \
+                (price, percentChange, daysRange, yearRange, symbolWidget, percentWidget)
             
 
         #threading.Timer(self.timer_interval, self.timer_callback).start()
@@ -66,7 +66,14 @@ class DisplayTk(object):
         self.quit = True
         self.rootWin.quit()
         
-        
+    def color_code(self, labelStr, symbolWidget, percentWidget):   
+            if labelStr[0] == "+" :
+                symbolWidget.config(fg = "blue")
+                percentWidget.config(fg = "blue")
+            else :
+                symbolWidget.config(fg = "red")
+                percentWidget.config(fg = "red")
+                 
         
     def timer_callback(self):
         
@@ -79,18 +86,15 @@ class DisplayTk(object):
         
         for elem in self.ticker.ticker_dict_list :
             entry = elem["Symbol"]
-            (price, percentChange, daysRange, yearRange, symbolWidget) = self.displayDict[entry]
+            (price, percentChange, daysRange, yearRange, symbolWidget, percentWidget) \
+                = self.displayDict[entry]
  
             labelStr = elem["Symbol"] + ": " + elem["LastTradePriceOnly"]
             price.set(labelStr)
             
             labelStr = elem["ChangeinPercent"]
             percentChange.set(labelStr)
-            if labelStr[0] == "+" :
-                symbolWidget.config(fg = "blue")
-            else :
-                symbolWidget.config(fg = "red")
-        
+            self.color_code(labelStr, symbolWidget, percentWidget)
             
             labelStr = "day: " + elem["DaysRange"]
             daysRange.set(labelStr)
