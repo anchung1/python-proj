@@ -15,7 +15,7 @@ class DisplayTk(object):
         self.quit = False
         self.displayDict = {}
         self.entry_count = 0
-        self.timer_interval = 2000
+        self.timer_interval = 10000 #in ms
         
 
         rowVal = 0
